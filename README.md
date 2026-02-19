@@ -2,26 +2,40 @@
 
 # Aula 1
 
+> **📝 Nota:** Nesta aula você trabalhará com o arquivo `scenes/game_aula1.js`. No `main.js`, altere o import para:
+> ```javascript
+> import { GameScene } from "./scenes/game_aula1.js";
+> ```
+
 ## O que é Phaser?
+
+Phaser é uma biblioteca JavaScript para criar jogos 2D que rodam no navegador. Com ela, você pode:
+- Criar jogos com física realista
+- Adicionar animações e sons
+- Detectar colisões entre objetos
+- E muito mais!
 
 ## Criando a Base do Jogo
 
 - Criar uma pasta e os arquivos necessários.
+    - Instalar a extensão Live Server;
     - Criar pasta assets;
     - Criar pasta scenes;
     - Criar arquivo index.html;
     - Criar arquivo main.js;
-    - Criar arquivo game.js na pasta scenes;
+    - Criar arquivo game_aula1.js na pasta scenes;
 
 - Linkar o Phaser no HTML.
     - Adicionar a versão minificada do phaser:
-    ```
+    ```html
+    <!-- Arquivo: index.html -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script> 
     ```
 
 - Criar configurações do Phaser
-    ```
-    import { GameScene } from "./scenes/game.js";
+    ```javascript
+    // Arquivo: main.js
+    import { GameScene } from "./scenes/game_aula1.js";
 
     const config = {
         type: Phaser.AUTO,
@@ -47,7 +61,8 @@
     const game = new Phaser.Game(config);
     ```
 - Criar a estrutura de uma cena.
-    ``` 
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     export class GameScene extends Phaser.Scene {
 
         constructor() {
@@ -67,7 +82,8 @@
     
 ## Adicionando elementos visuais:
 - Criar um cenário.
-     ```
+     ```javascript
+     // Arquivo: scenes/game_aula1.js
      export class GameScene extends Phaser.Scene {
 
     alturaJogo = 600;
@@ -86,7 +102,8 @@
     }
      ```
 - Inserir um personagem.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     
     preload() {
         this.load.spritesheet("grace_sprite", "../assets/spritesheetGrace.png", { frameWidth: 64, frameHeight: 64 })
@@ -100,7 +117,8 @@
     }
     ```
 - Criar plataformas.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     preload() {
         this.load.image("plataforma", "../assets/plataforma.png");
     }
@@ -117,7 +135,8 @@
     ```
 ## Introdução à física no Phaser:
 - Aplicação de gravidade no config
-    ```
+    ```javascript
+    // Arquivo: main.js
     physics: {
         default: "arcade",
         arcade: {
@@ -127,7 +146,8 @@
     }
     ```
 - Configuração de colisões entre personagem e plataformas.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     create() {
         for (let i = 0; i < this.plataformas.length; i++){
             this.physics.add.collider(this.player, this.plataformas[i]);
@@ -138,13 +158,15 @@
 ## Implementação de Movimentação e Controles
 
 - Capturar entrada do usuário.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     create() {
         this.cursors = this.input.keyboard.createCursorKeys();
     }
     ```
 - Aplicar movimentação ao personagem.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     update() {
         // Frente e trás (horizontal)
 
@@ -167,7 +189,8 @@
     }
     ```
 - Ajustando animações ao movimento.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     create() {
         // Animações da personagem
         this.anims.create({
@@ -192,7 +215,8 @@
     }
     ```
 
-    ```
+    ```javascript
+    // Arquivo: scenes/game_aula1.js
     update() {
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-160);
@@ -218,7 +242,8 @@
 - Introdução ao conceito de **Scenes** no Phaser.
 - Criar uma cena de tela inicial e uma cena de fase jogável.
     - Criar o arquivo welcome.js na pasta scenes
-    ```
+    ```javascript
+    // Arquivo: scenes/welcome.js
     export class WelcomeScene extends Phaser.Scene {
 
     alturaJogo = 600;
@@ -260,29 +285,40 @@
     ```
 - Adicionar a lógica de transição entre cenas.
     - Adicionar ao fim do create() na WelcomeScene
-    ```
+    ```javascript
+    // Arquivo: scenes/welcome.js
     this.botaoJogar.on("pointerdown", () => {
             this.scene.start("MainScene")
         })
     ```
     - Adicionar a cena no main.js
-    ```
+    ```javascript
+    // Arquivo: main.js
     import { WelcomeScene } from "./scenes/welcome.js";
 
     scene: [WelcomeScene, GameScene]
     ```
 
 # Aula 2
+
+> **📝 Nota:** A partir desta aula, você utilizará o arquivo completo `scenes/game_final.js`. No `main.js`, altere o import para:
+> ```javascript
+> import { GameScene } from "./scenes/game_final.js";
+> ```
+> Este arquivo já contém todo o código da Aula 1, e você adicionará as novas funcionalidades.
+
 ## Criando um Sistema de Pontuação
 
 - Criar e exibir um placar na tela.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_final.js
     create() {
         this.placar = this.add.text(50, 50, 'Pontuacao:' + this.pontuacao, {fontSize:'45px', fill:'#495613'});
     }
     ```
 - Implementar itens para coleta.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_final.js
     preload() {
         this.load.image("bug", "../assets/bug.png");
     }
@@ -295,7 +331,8 @@
     }
     ```
 - Atualizar a pontuação sempre que um item for coletado.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_final.js
     create() {
         this.physics.add.overlap(this.player, this.bug, () => { 
 
@@ -317,12 +354,14 @@
 ## Animações e Efeitos Visuais
 
 - Adicionando efeitos sonoros.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_final.js
     preload() {
         this.load.audio("musicaFundo", "../assets/musica.mp3");
     }
     ```
-    ```
+    ```javascript
+    // Arquivo: scenes/game_final.js
     create() {
                 this.musica = this.sound.add("musicaFundo");
         this.musica.play({
@@ -335,7 +374,8 @@
 ## Refinando a Estrutura e Testando o Jogo
 
 - Adicionar tela de fim de jogo
-    ```
+    ```javascript
+    // Arquivo: scenes/end.js
     export class EndScene extends Phaser.Scene {
 
     alturaJogo = 600;
@@ -403,7 +443,8 @@
     }}
     ```
 - Criar condições de vitória ou fim de jogo.
-    ```
+    ```javascript
+    // Arquivo: scenes/game_final.js
     update() {
         if (this.pontuacao >= 5){
             this.scene.stop('MainScene');

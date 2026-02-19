@@ -1,4 +1,4 @@
-import { GameScene } from "./scenes/game.js";
+import { GameScene } from "./scenes/game_final.js";
 import { WelcomeScene } from "./scenes/welcome.js";
 import { EndScene } from "./scenes/end.js";
 

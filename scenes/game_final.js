@@ -29,7 +29,6 @@ export class GameScene extends Phaser.Scene {
         this.add.image(this.larguraJogo/2, this.alturaJogo/2, "paisagem").setScale(0.6);
 
         this.player = this.physics.add.sprite(this.larguraJogo/2, 100, 'grace_sprite').setScale(1.3);
-        // this.player.body.setSize(151, 195, true);
         this.player.setCollideWorldBounds(true);
 
         this.plataformas[0] = this.physics.add.staticImage(200, 450, 'plataforma');
@@ -44,38 +43,30 @@ export class GameScene extends Phaser.Scene {
             this.physics.add.collider(this.player, this.plataformas[i]);
         }
         
-        // Adiciona as setas do teclado
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // adicionando placar 
         this.placar = this.add.text(50, 50, 'Pontuacao:' + this.pontuacao, {fontSize:'45px', fill:'#495613'});
 
-        // add o bug / mariposa
         this.bug = this.physics.add.sprite(this.larguraJogo/3, 0, 'bug');
-        this.bug.setCollideWorldBounds(true); // "borda no mundo"
+        this.bug.setCollideWorldBounds(true);
         this.bug.setScale(0.3);
-        this.physics.add.collider(this.bug, this.plataformas[0]); // faz com que o bug n consiga se sobrepor a plataforma
+        this.physics.add.collider(this.bug, this.plataformas[0]);
         this.physics.add.collider(this.bug, this.plataformas[1]);
 
-        // quando o player encostar no bug
         this.physics.add.overlap(this.player, this.bug, () => { 
 
-            this.bug.setVisible(false); //o bug fica invisível
+            this.bug.setVisible(false);
 
-            //número sorteado entre 50 e 650
             var posicaoBug_Y = Phaser.Math.RND.between(50, 650);
-            //ajusta a posição do bug de acordo com o número sorteado
             this.bug.setPosition(posicaoBug_Y, 100); 
 
-            this.pontuacao += 1; //soma pontuação
-            this.placar.setText('Pontuacao: ' + this.pontuacao); //atualiza o placar
+            this.pontuacao += 1;
+            this.placar.setText('Pontuacao: ' + this.pontuacao);
 
-            this.bug.setVisible(true); // torna o bug visível
+            this.bug.setVisible(true); 
 
         });
 
-    
-        // Animações da personagem
         this.anims.create({
             key: 'direita',
             frames: this.anims.generateFrameNumbers('grace_sprite', { start: 5, end: 8 }),
@@ -115,16 +106,14 @@ export class GameScene extends Phaser.Scene {
             }
         }
 
-        // Lógica de pulo (vertical) 
-        if (this.cursors.up.isDown) { // && (this.player.body.touching.down || this.player.body.blocked.down)
+        if (this.cursors.up.isDown) { 
             this.player.setVelocityY(-400);
         }
 
         if (this.cursors.down.isDown) {
-            this.player.setVelocityY(400); // Acelera a descida 
+            this.player.setVelocityY(400);
         }
 
-        // logica ganhar
         if (this.pontuacao >= 5){
             this.scene.stop('MainScene');
             this.scene.start('EndScene', "ganhou");
