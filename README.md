@@ -273,5 +273,149 @@
     ```
 
 # Aula 2
+## Criando um Sistema de Pontuação
 
+- Criar e exibir um placar na tela.
+    ```
+    create() {
+        this.placar = this.add.text(50, 50, 'Pontuacao:' + this.pontuacao, {fontSize:'45px', fill:'#495613'});
+    }
+    ```
+- Implementar itens para coleta.
+    ```
+    preload() {
+        this.load.image("bug", "../assets/bug.png");
+    }
+    create() {
+        this.bug = this.physics.add.sprite(this.larguraJogo/3, 0, 'bug');
+        this.bug.setCollideWorldBounds(true);
+        this.bug.setScale(0.3);
+        this.physics.add.collider(this.bug, this.plataformas[0]); 
+        this.physics.add.collider(this.bug, this.plataformas[1]);
+    }
+    ```
+- Atualizar a pontuação sempre que um item for coletado.
+    ```
+    create() {
+        this.physics.add.overlap(this.player, this.bug, () => { 
+
+            this.bug.setVisible(false);
+
+            var posicaoBug_Y = Phaser.Math.RND.between(50, 650);
+
+            this.bug.setPosition(posicaoBug_Y, 100); 
+
+            this.pontuacao += 1;
+            this.placar.setText('Pontuacao: ' + this.pontuacao);
+
+            this.bug.setVisible(true);
+
+        })
+    }
+    ```
+
+## Animações e Efeitos Visuais
+
+- Adicionando efeitos sonoros.
+    ```
+    preload() {
+        this.load.audio("musicaFundo", "../assets/musica.mp3");
+    }
+    ```
+    ```
+    create() {
+                this.musica = this.sound.add("musicaFundo");
+        this.musica.play({
+            loop: true,  
+            volume: 0.05 
+        });
+    }
+    ```
+
+## Refinando a Estrutura e Testando o Jogo
+
+- Adicionar tela de fim de jogo
+    ```
+    export class EndScene extends Phaser.Scene {
+
+    alturaJogo = 600;
+    larguraJogo = 800;
+
+    constructor() {
+        super("EndScene");
+    }
+
+    init(data) {
+        this.resultado = data.resultado;
+    }
+
+    preload() {
+        this.load.image("paisagem", "../assets/paisagem.png");
+        this.load.image("computador", "../assets/computador_paisagem.png");
+        this.load.image("grace", "../assets/grace.png");
+        this.load.image("perdeu", "../assets/perdeu.png");
+        this.load.image("ganhou", "../assets/ganhou.png");
+        this.load.image("menu", "../assets/botao_menu.png");
+        this.load.image("restart", "../assets/botao_restart.png");
+    }
+
+    create() {
+        this.add.image(this.larguraJogo/2, this.alturaJogo/2, "computador");
+        this.add.image(this.larguraJogo/2, 205, "grace").setScale(0.15);
+        this.botaoMenu = this.add.image(this.larguraJogo/2 - 100, 320, "menu").setScale(0.2).setInteractive();
+        this.botaoRestart = this.add.image(this.larguraJogo/2 + 100, 320, "restart").setScale(0.2).setInteractive();
+
+        this.botaoMenu.on("pointerover", () => {
+            this.input.setDefaultCursor("pointer");
+        });
+        
+        this.botaoMenu.on("pointerout", () => {
+            this.input.setDefaultCursor("default");
+        });
+
+        this.botaoMenu.on("pointerdown", () => {
+            this.scene.start("WelcomeScene")
+        })
+
+        this.botaoRestart.on("pointerover", () => {
+            this.input.setDefaultCursor("pointer");
+        });
+        
+        this.botaoRestart.on("pointerout", () => {
+            this.input.setDefaultCursor("default");
+        });
+
+        this.botaoRestart.on("pointerdown", () => {
+            this.scene.stop("EndScene");
+            this.scene.start("MainScene");
+        })
+
+        if (this.resultado === "ganhou"){
+            this.add.image(this.larguraJogo/2, 130, "ganhou").setScale(0.25);
+        }
+        if (this.resultado === "perdeu"){
+            this.add.image(this.larguraJogo/2, 130, "perdeu").setScale(0.25);
+        }
+    }
+
+    update() {
+
+    }}
+    ```
+- Criar condições de vitória ou fim de jogo.
+    ```
+    update() {
+        if (this.pontuacao >= 5){
+            this.scene.stop('MainScene');
+            this.scene.start('EndScene', "ganhou");
+        }
+    }
+    ```
+
+## Publicação e Compartilhamento
+
+- Como organizar os arquivos do projeto.
+- Criando um repositório no GitHub e subindo os arquivos.
+- Publicação do jogo no GitHub Pages.
+- Compartilhamento dos links entre as participantes.
 
